@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#11161e" />
+    <meta name="description" content="FuncRouter без UI-фреймворка. Обычный JavaScript рисует фигуры на canvas по URL." />
+    <title>FuncRouter — Canvas lab</title>
+  </head>
+  <body>
+    <div class="lab">
+      <header class="header">
+        <a class="brand" href="/">
+          <span class="brand-icon" aria-hidden="true">↗</span>
+          Func<span class="brand-accent">Router</span>
+          <span class="brand-divider">/</span>
+          <span class="lab-name">Canvas lab</span>
+        </a>
+        <span class="vanilla-badge">100% Vanilla JavaScript</span>
+      </header>
+      <main>
+        <div class="intro">
+          <div>
+            <p class="eyebrow">Один URL. Ни одного компонента.</p>
+            <h1>Маршруты обретают форму.</h1>
+            <p class="description">FuncRouter выбирает функцию. Canvas рисует фигуру.<br>Путь задаёт геометрию, query — цвет и поворот.</p>
+          </div>
+          <span class="intro-mark" aria-hidden="true">◯ △ □</span>
+        </div>
+        <div class="address-bar">
+          <span class="address-dot"></span>
+          <span class="address-label">ROUTE</span>
+          <code id="current-url">/</code>
+          <span class="live-badge">LIVE</span>
+        </div>
+
+        <div id="notice" class="notice" role="status" hidden></div>
+
+        <div class="lab-grid">
+          <section class="stage-panel" aria-labelledby="scene-title">
+            <div class="stage-heading">
+              <span id="scene-title">Геометрическая лаборатория</span>
+              <code id="scene-detail">Выберите маршрут</code>
+            </div>
+
+            <canvas
+              id="scene"
+              width="900"
+              height="560"
+              role="img"
+              aria-describedby="scene-description"
+            >Для этого примера нужен браузер с поддержкой canvas.</canvas>
+
+            <div class="stage-footer">
+              <span id="scene-description">Фигуры, нарисованные обычным JavaScript.</span>
+              <span class="canvas-badge">Canvas 2D</span>
+            </div>
+          </section>
+
+          <aside class="controls" aria-label="Параметры фигуры">
+            <div class="control-heading">
+              <span class="eyebrow">Настройте маршрут</span>
+              <h2>Геометрия</h2>
+            </div>
+
+            <form id="shape-form">
+              <label for="shape">Фигура</label>
+
+              <select id="shape" name="shape">
+                <option value="circle">Круг</option>
+                <option value="rectangle">Прямоугольник</option>
+                <option value="polygon">Многоугольник</option>
+              </select>
+
+              <div data-for="circle polygon">
+                <label for="radius">
+                  Радиус <span>12–180 px</span>
+                </label>
+                <input
+                  id="radius"
+                  name="radius"
+                  type="number"
+                  min="12"
+                  max="180"
+                  value="100"
+                  required
+                >
+              </div>
+
+              <div data-for="rectangle" hidden>
+                <label for="width">
+                  Ширина <span>24–380 px</span>
+                </label>
+                <input
+                  id="width"
+                  name="width"
+                  type="number"
+                  min="24"
+                  max="380"
+                  value="260"
+                  required
+                >
+              </div>
+
+              <div data-for="rectangle" hidden>
+                <label for="height">
+                  Высота <span>24–300 px</span>
+                </label>
+                <input
+                  id="height"
+                  name="height"
+                  type="number"
+                  min="24"
+                  max="300"
+                  value="160"
+                  required
+                >
+              </div>
+
+              <div data-for="polygon" hidden>
+                <label for="sides">
+                  Стороны <span>3–12</span>
+                </label>
+                <input
+                  id="sides"
+                  name="sides"
+                  type="number"
+                  min="3"
+                  max="12"
+                  value="6"
+                  required
+                >
+              </div>
+
+              <div class="query-heading">
+                <span class="eyebrow">Query-параметры</span>
+              </div>
+
+              <div class="color-field">
+                <label for="color">Цвет</label>
+                <input id="color" name="color" type="color" value="#b6a2ff">
+              </div>
+
+              <label for="rotation">
+                Поворот <span>в градусах</span>
+              </label>
+              <input
+                id="rotation"
+                name="rotation"
+                type="number"
+                min="-360"
+                max="360"
+                value="0"
+                required
+              >
+
+              <button type="submit">
+                Построить маршрут <span aria-hidden="true">↗</span>
+              </button>
+            </form>
+
+            <label class="guard-toggle">
+              <input id="lock" type="checkbox">
+              <span>
+                Зафиксировать сцену
+                <small>beforeEnter отменит смену фигуры</small>
+              </span>
+            </label>
+          </aside>
+        </div>
+
+        <section class="presets" aria-labelledby="presets-title">
+          <div class="section-heading">
+            <h2 id="presets-title">Попробуйте другой путь</h2>
+            <span>Обычные HTML-ссылки</span>
+          </div>
+
+          <nav aria-label="Готовые маршруты">
+            <a href="/shapes/circle/100?color=b6a2ff">
+              <span class="preset-symbol purple">◯</span>
+              <span>
+                Круг
+                <code>/shapes/circle/:radius</code>
+              </span>
+              <span class="arrow">↗</span>
+            </a>
+
+            <a href="/shapes/rectangle/260/160?color=9de6c4&rotation=15">
+              <span class="preset-symbol mint">▱</span>
+              <span>
+                Прямоугольник
+                <code>/shapes/rectangle/:width/:height</code>
+              </span>
+              <span class="arrow">↗</span>
+            </a>
+
+            <a href="/shapes/polygon/6/120?color=f1c28b&rotation=30">
+              <span class="preset-symbol peach">⬡</span>
+              <span>
+                Многоугольник
+                <code>/shapes/polygon/:sides/:radius</code>
+              </span>
+              <span class="arrow">↗</span>
+            </a>
+          </nav>
+        </section>
+
+        <div class="extra-routes">
+          <span>Ещё маршруты:</span>
+          <a href="/gallery/experiments/geometry">*path / вложенный путь</a>
+          <a href="/unknown/shape">404 / неизвестный путь</a>
+          <a href="/shapes/circle/nope">Ошибка параметра</a>
+        </div>
+      </main>
+
+      <footer>
+        <span>Отрисовка: Canvas 2D · Маршрутизация: FuncRouter</span>
+        <span>Без FuncUI и других UI-библиотек</span>
+      </footer>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

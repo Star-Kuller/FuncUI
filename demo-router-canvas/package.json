@@ -1,0 +1,19 @@
+{
+  "name": "funcrouter-canvas-demo",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "node --test test/*.test.js"
+  },
+  "dependencies": {
+    "funcrouter": "0.0.0"
+  },
+  "devDependencies": {
+    "jsdom": "30.1.3",
+    "vite": "8.3.4"
+  }
+}

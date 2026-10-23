@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ru" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Реактор кликов · FuncUI</title>
+    <link rel="stylesheet" href="./styles.css" />
+</head>
+
+<body>
+    <div id="app"></div>
+
+    <script type="module">
+        import { $, mount, main, div, section } from 'funcui';
+        import {
+            pageHeader, statistics, reactor, boosterCard,
+            droneCard, mission, pageFooter, supernova
+        } from './ui.js';
+
+        const goal = 1000;
+        const state = $({
+            energy: 0,
+            total: 0,
+            boosters: 0,
+            drones: 0,
+            celebrating: false
+        });
+
+        const clickPower = () => 1 + state.boosters;
+        const boosterPrice = () => Math.ceil(10 * 1.5 ** state.boosters);
+        const dronePrice = () => Math.ceil(25 * 1.5 ** state.drones);
+        let celebrationTimer;
+
+        function addEnergy(amount) {
+            const reachedGoal = state.total < goal && state.total + amount >= goal;
+
+            state.energy += amount;
+            state.total += amount;
+
+            if (reachedGoal) {
+                state.celebrating = true;
+                celebrationTimer = setTimeout(() => {
+                    state.celebrating = false;
+                }, 4500);
+            }
+        }
+
+        function collect() {
+            addEnergy(clickPower());
+        }
+
+        function buyBooster() {
+            const price = boosterPrice();
+            if (state.energy < price) return;
+
+            state.energy -= price;
+            state.boosters++;
+        }
+
+        function buyDrone() {
+            const price = dronePrice();
+            if (state.energy < price) return;
+
+            state.energy -= price;
+            state.drones++;
+        }
+
+        function shop() {
+            section({ class: 'shop', 'aria-label': 'Улучшения' }, () => {
+                boosterCard(state, boosterPrice, buyBooster);
+                droneCard(state, dronePrice, buyDrone);
+            });
+        }
+
+        const app = mount('#app', () => {
+            main(() => {
+                pageHeader();
+                statistics(state, clickPower);
+
+                div({ class: 'game' }, () => {
+                    reactor({ state, goal, clickPower, onCollect: collect });
+                    shop();
+                });
+
+                mission(state, goal);
+                pageFooter();
+                supernova(state);
+            });
+        });
+
+        // Интервал создаётся один раз, а при обновлении кода освобождается.
+        const productionTimer = setInterval(() => {
+            addEnergy(state.drones);
+        }, 1000);
+
+        if (import.meta.hot) {
+            import.meta.hot.dispose(() => {
+                clearInterval(productionTimer);
+                clearTimeout(celebrationTimer);
+                app.unmount();
+            });
+        }
+    </script>
+</body>
+
+</html>

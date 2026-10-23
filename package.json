@@ -1,0 +1,22 @@
+{
+  "name": "funcui-workspace",
+  "private": true,
+  "type": "module",
+  "workspaces": ["funcui", "funcrouter", "demo", "demo-router", "demo-router-canvas"],
+  "scripts": {
+    "dev": "npm run dev -w demo",
+    "dev:router": "npm run dev -w demo-router",
+    "dev:canvas": "npm run dev -w demo-router-canvas",
+    "test": "npm test --workspaces --if-present",
+    "test:watch": "npm run test:watch -w funcui",
+    "test:router": "npm test -w funcrouter",
+    "build": "npm run build --workspaces --if-present",
+    "preview": "npm run preview -w demo",
+    "preview:router": "npm run preview -w demo-router",
+    "preview:canvas": "npm run preview -w demo-router-canvas"
+  },
+  "engines": {
+    "node": "^22.22.2 || ^24.15.0 || >=26.0.0",
+    "npm": ">=7"
+  }
+}

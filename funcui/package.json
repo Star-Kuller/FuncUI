@@ -1,0 +1,15 @@
+{
+  "name": "funcui",
+  "version": "0.0.0",
+  "description": "Reactive interfaces. Just JavaScript.",
+  "type": "module",
+  "exports": "./src/index.js",
+  "files": ["src", "README.md"],
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "test:watch": "node --test --watch test/*.test.js"
+  },
+  "devDependencies": {
+    "jsdom": "30.1.3"
+  }
+}
